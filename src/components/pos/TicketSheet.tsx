@@ -75,7 +75,7 @@ export function TicketSheet({
             {lines.map((line) => (
               <li
                 key={line.id}
-                className="rounded-2xl border border-border bg-background px-3 py-2.5"
+                className="rounded-2xl border border-border bg-background px-3 py-2"
               >
                 {/* Fila 1: descripción completa */}
                 <div className="flex items-start gap-2.5">
@@ -90,7 +90,7 @@ export function TicketSheet({
                   </p>
                 </div>
                 {/* Fila 2: precio, cantidades y subtotal */}
-                <div className="mt-1.5 flex items-center gap-2 pl-[50px]">
+                <div className="mt-1 flex items-center gap-2 pl-[50px]">
                   <span className="text-xs font-medium tabular-nums text-muted-foreground">
                     {money(line.unitPrice)} c/u
                   </span>
@@ -98,9 +98,9 @@ export function TicketSheet({
                     type="button"
                     aria-label={`Quitar ${line.name}`}
                     onClick={() => onRemove(line.id)}
-                    className="grid size-7 shrink-0 place-items-center rounded-lg border border-border text-destructive transition-colors hover:bg-destructive/10"
+                    className="grid size-6 shrink-0 place-items-center rounded-lg border border-border text-destructive transition-colors hover:bg-destructive/10"
                   >
-                    <X className="size-3.5" />
+                    <X className="size-3" />
                   </button>
                   <span className="w-4 text-center text-sm font-semibold tabular-nums text-foreground">
                     {line.qty}
@@ -109,9 +109,9 @@ export function TicketSheet({
                     type="button"
                     aria-label={`Agregar ${line.name}`}
                     onClick={() => onChangeQty(line.id, 1)}
-                    className="grid size-7 shrink-0 place-items-center rounded-full border border-border text-foreground transition-colors hover:bg-accent"
+                    className="grid size-6 shrink-0 place-items-center rounded-full border border-border text-foreground transition-colors hover:bg-accent"
                   >
-                    <Plus className="size-3.5" />
+                    <Plus className="size-3" />
                   </button>
                   <span className="ml-auto text-sm font-bold tabular-nums text-foreground">
                     {money(line.qty * line.unitPrice)}
