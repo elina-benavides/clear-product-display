@@ -20,6 +20,8 @@ export interface TicketLine {
   unitPrice: number;
   qty: number;
   image: string;
+  note?: string;
+  discountPercent?: number;
 }
 
 export const CATEGORIES: Category[] = [
@@ -91,3 +93,8 @@ export const PRODUCTS: Product[] = [
 export const CUSTOMER = "CONSUMIDOR FINAL";
 
 export const money = (n: number) => `$${n.toFixed(2)}`;
+
+export const ticketLineTotal = (line: TicketLine) => {
+  const discount = line.discountPercent ?? 0;
+  return line.qty * line.unitPrice * (1 - discount / 100);
+};

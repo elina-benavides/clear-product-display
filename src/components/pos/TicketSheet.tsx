@@ -1,12 +1,18 @@
 import {
   ChevronDown,
+  MessageSquareText,
   Plus,
   Save,
   ShoppingCart,
   User,
   X,
 } from "lucide-react";
-import { CUSTOMER, money, type TicketLine } from "@/lib/pos-data";
+import {
+  CUSTOMER,
+  money,
+  ticketLineTotal,
+  type TicketLine,
+} from "@/lib/pos-data";
 
 interface TicketSheetProps {
   open: boolean;
@@ -32,7 +38,7 @@ export function TicketSheet({
   if (!open) return null;
 
   const totalQty = lines.reduce((acc, l) => acc + l.qty, 0);
-  const subtotal = lines.reduce((acc, l) => acc + l.qty * l.unitPrice, 0);
+  const subtotal = lines.reduce((acc, line) => acc + ticketLineTotal(line), 0);
 
   return (
     <div className="fixed inset-0 z-20 mx-auto max-w-md">
@@ -71,34 +77,44 @@ export function TicketSheet({
         </div>
 
         {lines.length > 0 ? (
-          <ul className="min-h-0 flex-1 space-y-2.5 overflow-y-auto px-4 pb-3">
+          <ul className="min-h-0 flex-1 space-y-2 overflow-y-auto px-4 pb-3">
             {lines.map((line) => (
               <li
                 key={line.id}
-                className="rounded-2xl border border-border bg-background px-3 py-2"
+                className="grid grid-cols-[40px_minmax(0,1fr)] gap-x-2.5 rounded-2xl border border-border bg-background px-3 py-2"
               >
-                {/* Fila 1: descripción completa */}
-                <div className="flex items-start gap-2.5">
-                  <img
-                    src={line.image}
-                    alt=""
-                    loading="lazy"
-                    className="size-10 shrink-0 rounded-xl object-cover"
-                  />
-                  <p className="line-clamp-2 min-w-0 text-sm font-medium leading-snug text-foreground">
-                    {line.name}
+                <img
+                  src={line.image}
+                  alt=""
+                  loading="lazy"
+                  className="row-span-3 size-10 rounded-xl object-cover"
+                />
+                <p className="line-clamp-2 min-w-0 text-sm font-medium leading-[1.2] text-foreground">
+                  {line.name}
+                </p>
+                {line.note && (
+                  <p className="col-start-2 mt-0.5 flex min-w-0 items-center gap-1 text-[11px] leading-tight text-muted-foreground">
+                    <MessageSquareText className="size-3 shrink-0" />
+                    <span className="truncate">{line.note}</span>
                   </p>
-                </div>
-                {/* Fila 2: precio, cantidades y subtotal */}
-                <div className="mt-1 flex items-center gap-2 pl-[50px]">
-                  <span className="text-xs font-medium tabular-nums text-muted-foreground">
-                    {money(line.unitPrice)} c/u
+                )}
+                <div className="col-start-2 mt-0.5 flex min-w-0 items-center gap-1.5">
+                  <span className="shrink-0 text-xs font-medium tabular-nums text-muted-foreground">
+                    {money(
+                      line.unitPrice * (1 - (line.discountPercent ?? 0) / 100),
+                    )}{" "}
+                    c/u
                   </span>
+                  {line.discountPercent ? (
+                    <span className="shrink-0 rounded bg-destructive/10 px-1 py-0.5 text-[10px] font-bold leading-none text-destructive">
+                      -{line.discountPercent}%
+                    </span>
+                  ) : null}
                   <button
                     type="button"
                     aria-label={`Quitar ${line.name}`}
                     onClick={() => onRemove(line.id)}
-                    className="grid size-6 shrink-0 place-items-center rounded-lg border border-border text-destructive transition-colors hover:bg-destructive/10"
+                    className="ml-auto grid size-6 shrink-0 place-items-center rounded-lg border border-border text-destructive transition-colors hover:bg-destructive/10"
                   >
                     <X className="size-3" />
                   </button>
@@ -113,8 +129,8 @@ export function TicketSheet({
                   >
                     <Plus className="size-3" />
                   </button>
-                  <span className="ml-auto text-sm font-bold tabular-nums text-foreground">
-                    {money(line.qty * line.unitPrice)}
+                  <span className="ml-0.5 shrink-0 text-sm font-bold tabular-nums text-foreground">
+                    {money(ticketLineTotal(line))}
                   </span>
                 </div>
               </li>
