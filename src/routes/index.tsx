@@ -50,14 +50,14 @@ function Index() {
       name: "7 Tortillas de Tiesto",
       unitPrice: 2.0,
       qty: 1,
-      image: PRODUCTS[0].image,
+      image: PRODUCTS[0]!.image,
     },
     {
       id: "agua-aromatica",
       name: "Agua Aromática de Hierba Luisa",
       unitPrice: 1.0,
       qty: 1,
-      image: PRODUCTS[1].image,
+      image: PRODUCTS[1]!.image,
     },
   ]);
   const [ticketOpen, setTicketOpen] = useState(true);
