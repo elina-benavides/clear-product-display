@@ -16,6 +16,7 @@ import {
   CUSTOMER,
   PRODUCTS,
   money,
+  ticketLineTotal,
   type Category,
   type TicketLine,
 } from "@/lib/pos-data";
@@ -51,6 +52,8 @@ function Index() {
       unitPrice: 2.0,
       qty: 1,
       image: PRODUCTS[0]!.image,
+      note: "Bien doraditas, por favor",
+      discountPercent: 10,
     },
     {
       id: "agua-aromatica",
@@ -67,7 +70,7 @@ function Index() {
   const [toast, setToast] = useState<string | null>(null);
 
   const totalQty = lines.reduce((acc, l) => acc + l.qty, 0);
-  const subtotal = lines.reduce((acc, l) => acc + l.qty * l.unitPrice, 0);
+  const subtotal = lines.reduce((acc, line) => acc + ticketLineTotal(line), 0);
 
   useEffect(() => {
     if (!toast) return;
